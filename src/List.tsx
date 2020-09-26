@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { ListData } from "./data";
 import { colors, rounded } from "./styles/constants";
@@ -30,6 +31,7 @@ export function List(props: ListProps) {
       {list.cards.map((card) => (
         <Card card={card}></Card>
       ))}
+      <AddForm />
     </StyledList>
   );
 }

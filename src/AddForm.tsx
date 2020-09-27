@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
 import { colors, rounded } from "./styles/constants";
 import { StyledCard } from "./Card";
@@ -37,16 +37,39 @@ const StyledAddTextArea = styled.textarea`
   font-size: 15px;
 `;
 
-export function AddForm() {
+interface AddFormProps {
+  onAdd: (text: string) => void;
+  onCancel: () => void;
+}
+
+export function AddForm(props: AddFormProps) {
+  const { onAdd, onCancel } = props;
+
+  const textRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleAddConfirm = useCallback(() => {
+    const value = (textRef?.current?.value || "").trim();
+    if (!value) {
+      return;
+    }
+
+    onAdd(value);
+  }, [textRef, onAdd]);
+
   return (
     <div>
       <StyledCard>
-        <StyledAddTextArea placeholder="Enter some text for this card"></StyledAddTextArea>
+        <StyledAddTextArea
+          ref={textRef}
+          placeholder="Enter some text for this card"
+        ></StyledAddTextArea>
       </StyledCard>
 
       <StyledConfirmContainer>
-        <StyledAddConfirmButton>Add Card</StyledAddConfirmButton>
-        <StyledCancelAddButton>
+        <StyledAddConfirmButton onClick={handleAddConfirm}>
+          Add Card
+        </StyledAddConfirmButton>
+        <StyledCancelAddButton onClick={onCancel}>
           <i className="icofont-close-line icofont-2x"></i>
         </StyledCancelAddButton>
       </StyledConfirmContainer>

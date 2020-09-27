@@ -31,7 +31,10 @@ export function List(props: ListProps) {
       {Object.values(list.cards).map((card) => (
         <Card card={card} key={card.id}></Card>
       ))}
-      <AddForm />
+      <AddForm
+        onAdd={(text) => console.log("adding card with text ", text)}
+        onCancel={() => console.log("cancel adding a card")}
+      />
     </StyledList>
   );
 }

@@ -28,8 +28,8 @@ export function List(props: ListProps) {
   return (
     <StyledList>
       <ListHeading>{list.name}</ListHeading>
-      {list.cards.map((card) => (
-        <Card card={card}></Card>
+      {Object.values(list.cards).map((card) => (
+        <Card card={card} key={card.id}></Card>
       ))}
       <AddForm />
     </StyledList>

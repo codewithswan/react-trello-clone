@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { List } from "./List";
+import data from "./data";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -18,19 +19,9 @@ export const StyledBoard = styled.div`
 export function Board() {
   return (
     <StyledBoard>
-      <List
-        list={{
-          name: "To do",
-          cards: [
-            {
-              text: "hello 1",
-            },
-            {
-              text: "hello 2",
-            },
-          ],
-        }}
-      />
+      {Object.values(data.lists).map((l) => (
+        <List list={l} key={l.id} />
+      ))}
     </StyledBoard>
   );
 }

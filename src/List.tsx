@@ -23,10 +23,11 @@ interface ListProps {
   isAdding: boolean;
   list: ListData;
   onStartAdd: () => void;
+  onCancel: () => void;
 }
 
 export function List(props: ListProps) {
-  const { list, onStartAdd, isAdding } = props;
+  const { list, onStartAdd, isAdding, onCancel } = props;
 
   return (
     <StyledList>
@@ -39,7 +40,7 @@ export function List(props: ListProps) {
         <AddForm
           onStartAdd={onStartAdd}
           onAdd={(text) => console.log("adding card with text ", text)}
-          onCancel={() => console.log("cancel adding a card")}
+          onCancel={onCancel}
         />
       )}
     </StyledList>

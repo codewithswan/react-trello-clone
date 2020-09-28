@@ -20,12 +20,13 @@ const ListHeading = styled.div`
 `;
 
 interface ListProps {
+  isAdding: boolean;
   list: ListData;
   onStartAdd: () => void;
 }
 
 export function List(props: ListProps) {
-  const { list, onStartAdd } = props;
+  const { list, onStartAdd, isAdding } = props;
 
   return (
     <StyledList>
@@ -33,12 +34,14 @@ export function List(props: ListProps) {
       {Object.values(list.cards).map((card) => (
         <Card card={card} key={card.id}></Card>
       ))}
-      {<AddButton onClick={onStartAdd} />}
-      <AddForm
-        onStartAdd={onStartAdd}
-        onAdd={(text) => console.log("adding card with text ", text)}
-        onCancel={() => console.log("cancel adding a card")}
-      />
+      {!isAdding && <AddButton onClick={onStartAdd} />}
+      {isAdding && (
+        <AddForm
+          onStartAdd={onStartAdd}
+          onAdd={(text) => console.log("adding card with text ", text)}
+          onCancel={() => console.log("cancel adding a card")}
+        />
+      )}
     </StyledList>
   );
 }

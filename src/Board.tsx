@@ -22,11 +22,12 @@ export function Board() {
 
   return (
     <StyledBoard>
-      {Object.values(data.lists).map((l) => (
+      {Object.values(state.lists).map((l) => (
         <List
           list={l}
           key={l.id}
           onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
+          isAdding={l.id === state.addingOnList}
         />
       ))}
     </StyledBoard>

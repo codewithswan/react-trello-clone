@@ -11,9 +11,10 @@ export interface ListData {
   name: string;
 }
 
-export type BoardData = {
+export interface BoardData {
+  addingOnList: string | undefined;
   lists: { [key: string]: ListData };
-};
+}
 
 const listId1 = v4();
 const listId2 = v4();

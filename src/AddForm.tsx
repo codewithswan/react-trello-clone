@@ -40,6 +40,7 @@ const StyledAddTextArea = styled.textarea`
 interface AddFormProps {
   onAdd: (text: string) => void;
   onCancel: () => void;
+  onStartAdd: () => void;
 }
 
 export function AddForm(props: AddFormProps) {

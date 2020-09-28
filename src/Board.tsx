@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useReducer } from "react";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { List } from "./List";
 import data from "./data";
+import { reducer } from "./reducer";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -17,10 +18,16 @@ export const StyledBoard = styled.div`
 `;
 
 export function Board() {
+  const [state, dispatch] = useReducer(reducer, data);
+
   return (
     <StyledBoard>
       {Object.values(data.lists).map((l) => (
-        <List list={l} key={l.id} />
+        <List
+          list={l}
+          key={l.id}
+          onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
+        />
       ))}
     </StyledBoard>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { AddButton } from "./AddButton";
 import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { ListData } from "./data";
@@ -20,10 +21,11 @@ const ListHeading = styled.div`
 
 interface ListProps {
   list: ListData;
+  onStartAdd: () => void;
 }
 
 export function List(props: ListProps) {
-  const { list } = props;
+  const { list, onStartAdd } = props;
 
   return (
     <StyledList>
@@ -31,7 +33,9 @@ export function List(props: ListProps) {
       {Object.values(list.cards).map((card) => (
         <Card card={card} key={card.id}></Card>
       ))}
+      {<AddButton onClick={onStartAdd} />}
       <AddForm
+        onStartAdd={onStartAdd}
         onAdd={(text) => console.log("adding card with text ", text)}
         onCancel={() => console.log("cancel adding a card")}
       />

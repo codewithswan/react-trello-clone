@@ -36,6 +36,7 @@ export function reducer(state: BoardData, action: BoardAction): BoardData {
 
       return {
         ...state,
+        addingOnList: undefined,
         lists: {
           ...state.lists,
           [targetList.id]: {

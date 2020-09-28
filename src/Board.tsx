@@ -28,6 +28,7 @@ export function Board() {
           key={l.id}
           onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
           onCancel={() => dispatch({ type: "addCancel" })}
+          onAdd={(text) => dispatch({ type: "confirmAdd", text })}
           isAdding={l.id === state.addingOnList}
         />
       ))}

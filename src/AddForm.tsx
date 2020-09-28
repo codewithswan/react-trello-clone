@@ -55,6 +55,10 @@ export function AddForm(props: AddFormProps) {
     }
 
     onAdd(value);
+
+    if (textRef?.current) {
+      textRef.current.value = "";
+    }
   }, [textRef, onAdd]);
 
   return (

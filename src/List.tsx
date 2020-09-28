@@ -24,10 +24,11 @@ interface ListProps {
   list: ListData;
   onStartAdd: () => void;
   onCancel: () => void;
+  onAdd: (text: string) => void;
 }
 
 export function List(props: ListProps) {
-  const { list, onStartAdd, isAdding, onCancel } = props;
+  const { list, onStartAdd, isAdding, onCancel, onAdd } = props;
 
   return (
     <StyledList>
@@ -37,11 +38,7 @@ export function List(props: ListProps) {
       ))}
       {!isAdding && <AddButton onClick={onStartAdd} />}
       {isAdding && (
-        <AddForm
-          onStartAdd={onStartAdd}
-          onAdd={(text) => console.log("adding card with text ", text)}
-          onCancel={onCancel}
-        />
+        <AddForm onStartAdd={onStartAdd} onAdd={onAdd} onCancel={onCancel} />
       )}
     </StyledList>
   );

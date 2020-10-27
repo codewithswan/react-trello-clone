@@ -1,5 +1,6 @@
 import { v4 } from "uuid";
 import { BoardData } from "./data";
+import { produce } from "immer";
 
 interface StartAddAction {
   type: "startAdd";
@@ -20,37 +21,25 @@ type BoardAction = StartAddAction | AddCancel | ConfirmAddAction;
 export function reducer(state: BoardData, action: BoardAction): BoardData {
   switch (action.type) {
     case "startAdd":
-      return {
-        ...state,
-        addingOnList: action.listId,
-      };
+      return produce(state, (s) => {
+        s.addingOnList = action.listId;
+      });
 
     case "addCancel":
-      return {
-        ...state,
-        addingOnList: undefined,
-      };
+      return produce(state, (s) => {
+        s.addingOnList = undefined;
+      });
+
     case "confirmAdd": {
       const newId = v4();
-      const targetList = state.lists[state.addingOnList!];
 
-      return {
-        ...state,
-        addingOnList: undefined,
-        lists: {
-          ...state.lists,
-          [targetList.id]: {
-            ...targetList,
-            cards: {
-              ...targetList.cards,
-              [newId]: {
-                id: newId,
-                text: action.text,
-              },
-            },
-          },
-        },
-      };
+      return produce(state, (s) => {
+        s.addingOnList = undefined;
+        s.lists[state.addingOnList!].cards[newId] = {
+          id: newId,
+          text: action.text,
+        };
+      });
     }
   }
 }

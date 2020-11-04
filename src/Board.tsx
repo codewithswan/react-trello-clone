@@ -27,7 +27,9 @@ export function Board() {
       onDragEnd={(result: any) => dispatch({ type: "dragEnd", result })}
     >
     <StyledBoard>
-      {Object.values(state.lists).map((l) => (
+      {Object.values(state.lists)
+      .sort((a, b) => a.index - b.index)
+      .map((l) => (
         <List
           list={l}
           key={l.id}

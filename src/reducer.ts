@@ -42,12 +42,13 @@ export function reducer(state: BoardData, action: BoardAction): BoardData {
 
     case "confirmAdd": {
       const newId = v4();
-
+      const targetList = state.lists[state.addingOnList!];
       return produce(state, (s) => {
         s.addingOnList = undefined;
         s.lists[state.addingOnList!].cards[newId] = {
           id: newId,
           text: action.text,
+          index: Object.keys(targetList).length,
         };
       });
     }

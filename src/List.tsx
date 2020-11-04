@@ -36,7 +36,7 @@ export function List(props: ListProps) {
     {(provided, snapshot) => (
     <StyledList ref={provided.innerRef}>
       <ListHeading>{list.name}</ListHeading>
-      {Object.values(list.cards).map((card) => (
+      {Object.values(list.cards).sort((a, b) => a.index - b.index).map((card) => (
         <Card card={card} key={card.id}></Card>
       ))}
       {!isAdding && <AddButton onClick={onStartAdd} />}

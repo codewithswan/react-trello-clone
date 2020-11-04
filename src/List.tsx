@@ -5,6 +5,7 @@ import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { ListData } from "./data";
 import { colors, rounded } from "./styles/constants";
+import { Droppable } from "react-beautiful-dnd";
 
 const StyledList = styled.div`
   background-color: ${colors.gray200};
@@ -31,7 +32,9 @@ export function List(props: ListProps) {
   const { list, onStartAdd, isAdding, onCancel, onAdd } = props;
 
   return (
-    <StyledList>
+    <Droppable droppableId={list.id}>
+    {(provided, snapshot) => (
+    <StyledList ref={provided.innerRef}>
       <ListHeading>{list.name}</ListHeading>
       {Object.values(list.cards).map((card) => (
         <Card card={card} key={card.id}></Card>
@@ -40,6 +43,7 @@ export function List(props: ListProps) {
       {isAdding && (
         <AddForm onStartAdd={onStartAdd} onAdd={onAdd} onCancel={onCancel} />
       )}
-    </StyledList>
+      {provided.placeholder}
+    </StyledList>)}</Droppable>
   );
 }

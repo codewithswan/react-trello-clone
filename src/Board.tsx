@@ -5,6 +5,8 @@ import { List } from "./List";
 import data from "./data";
 import { reducer } from "./reducer";
 
+import { DragDropContext } from "react-beautiful-dnd";
+
 export const StyledBoard = styled.div`
   display: flex;
   overflow-x: scroll;
@@ -21,6 +23,9 @@ export function Board() {
   const [state, dispatch] = useReducer(reducer, data);
 
   return (
+    <DragDropContext
+      onDragEnd={(result: any) => dispatch({ type: "dragEnd", result })}
+    >
     <StyledBoard>
       {Object.values(state.lists).map((l) => (
         <List
@@ -33,5 +38,6 @@ export function Board() {
         />
       ))}
     </StyledBoard>
+    </DragDropContext>
   );
 }

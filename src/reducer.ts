@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import { BoardData } from "./data";
 import { produce } from "immer";
+import { DropResult } from "react-beautiful-dnd";
 
 interface StartAddAction {
   type: "startAdd";
@@ -16,7 +17,16 @@ interface ConfirmAddAction {
   text: string;
 }
 
-type BoardAction = StartAddAction | AddCancel | ConfirmAddAction;
+interface DragEndAction {
+  type: "dragEnd";
+  result: DropResult;
+}
+
+type BoardAction =
+  | StartAddAction
+  | AddCancel
+  | ConfirmAddAction
+  | DragEndAction;
 
 export function reducer(state: BoardData, action: BoardAction): BoardData {
   switch (action.type) {
@@ -42,4 +52,6 @@ export function reducer(state: BoardData, action: BoardAction): BoardData {
       });
     }
   }
+
+  return state;
 }

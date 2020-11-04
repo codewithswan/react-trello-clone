@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { colors, rounded } from "./styles/constants";
 import { CardData } from "./data";
+import { Draggable } from "react-beautiful-dnd";
 
 export const StyledCard = styled.div`
   background-color: ${colors.white};
@@ -18,6 +19,15 @@ interface CardProps {
 
 export function Card(props: CardProps) {
   const { card } = props;
-
-  return <StyledCard>{card.text}</StyledCard>;
+  return <Draggable key={card.id} draggableId={card.id} index={0}>
+  {(provided) => (
+    <StyledCard
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+    >
+      {card.text}
+    </StyledCard>
+  )}
+</Draggable>
 }

@@ -22,6 +22,8 @@ export const StyledBoard = styled.div`
 export function Board() {
   const [state, dispatch] = useReducer(reducer, data);
 
+  console.log('rendering ', state)
+
   return (
     <DragDropContext
       onDragEnd={(result: any) => dispatch({ type: "dragEnd", result })}

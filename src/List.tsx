@@ -39,11 +39,12 @@ export function List(props: ListProps) {
       {Object.values(list.cards).sort((a, b) => a.index - b.index).map((card) => (
         <Card card={card} key={card.id}></Card>
       ))}
+      {provided.placeholder}
       {!isAdding && <AddButton onClick={onStartAdd} />}
       {isAdding && (
         <AddForm onStartAdd={onStartAdd} onAdd={onAdd} onCancel={onCancel} />
       )}
-      {provided.placeholder}
+
     </StyledList>)}</Droppable>
   );
 }

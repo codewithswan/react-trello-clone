@@ -19,7 +19,7 @@ interface CardProps {
 
 export function Card(props: CardProps) {
   const { card } = props;
-  return <Draggable key={card.id} draggableId={card.id} index={0}>
+  return <Draggable key={card.id} draggableId={card.id} index={card.index}>
   {(provided) => (
     <StyledCard
       ref={provided.innerRef}

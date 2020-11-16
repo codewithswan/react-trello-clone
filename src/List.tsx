@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { AddButton } from "./AddButton";
 import { AddForm } from "./AddForm";
 import { Card } from "./Card";
-import { ListData } from "./data";
 import { colors, rounded } from "./styles/constants";
 import { Droppable } from "react-beautiful-dnd";
+import { ListData } from "./state/types";
 
 const StyledList = styled.div`
   background-color: ${colors.gray200};
@@ -33,18 +33,25 @@ export function List(props: ListProps) {
 
   return (
     <Droppable droppableId={list.id}>
-    {(provided, snapshot) => (
-    <StyledList ref={provided.innerRef}>
-      <ListHeading>{list.name}</ListHeading>
-      {Object.values(list.cards).sort((a, b) => a.index - b.index).map((card) => (
-        <Card card={card} key={card.id}></Card>
-      ))}
-      {provided.placeholder}
-      {!isAdding && <AddButton onClick={onStartAdd} />}
-      {isAdding && (
-        <AddForm onStartAdd={onStartAdd} onAdd={onAdd} onCancel={onCancel} />
+      {(provided, snapshot) => (
+        <StyledList ref={provided.innerRef}>
+          <ListHeading>{list.name}</ListHeading>
+          {Object.values(list.cards)
+            .sort((a, b) => a.index - b.index)
+            .map((card) => (
+              <Card card={card} key={card.id}></Card>
+            ))}
+          {provided.placeholder}
+          {!isAdding && <AddButton onClick={onStartAdd} />}
+          {isAdding && (
+            <AddForm
+              onStartAdd={onStartAdd}
+              onAdd={onAdd}
+              onCancel={onCancel}
+            />
+          )}
+        </StyledList>
       )}
-
-    </StyledList>)}</Droppable>
+    </Droppable>
   );
 }

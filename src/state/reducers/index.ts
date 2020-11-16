@@ -1,37 +1,16 @@
 import { v4 } from "uuid";
-import { BoardData } from "./data";
 import { produce } from "immer";
-import { DropResult } from "react-beautiful-dnd";
-import { positionIndexedItem } from "./lib/positionIndexedItem";
+import { positionIndexedItem } from "../../lib/positionIndexedItem";
+import { BoardAction } from "../actions";
+import { BoardData } from "../types";
 
-interface StartAddAction {
-  type: "startAdd";
-  listId: string;
-}
-
-interface AddCancel {
-  type: "addCancel";
-}
-
-interface ConfirmAddAction {
-  type: "confirmAdd";
-  text: string;
-}
-
-interface DragEndAction {
-  type: "dragEnd";
-  result: DropResult;
-}
-
-type BoardAction =
-  | StartAddAction
-  | AddCancel
-  | ConfirmAddAction
-  | DragEndAction;
-
-export function reducer(state: BoardData, action: BoardAction): BoardData {
-  console.log("received action ", action);
-
+export default function reducer(
+  state: BoardData = {
+    addingOnList: undefined,
+    lists: {},
+  },
+  action: BoardAction
+): BoardData {
   switch (action.type) {
     case "startAdd":
       return produce(state, (s) => {

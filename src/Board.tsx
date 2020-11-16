@@ -1,11 +1,10 @@
-import React, { useReducer } from "react";
+import React from "react";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { List } from "./List";
-import data from "./data";
-import { reducer } from "./reducer";
-
+import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
+import { BoardData } from "./state/types";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -19,29 +18,28 @@ export const StyledBoard = styled.div`
   color: ${colors.gray900};
 `;
 
-export function Board() {
-  const [state, dispatch] = useReducer(reducer, data);
-
-  console.log('rendering ', state)
+export default function Board() {
+  const dispatch = useDispatch();
+  const state = useSelector((s: BoardData) => s);
 
   return (
     <DragDropContext
       onDragEnd={(result: any) => dispatch({ type: "dragEnd", result })}
     >
-    <StyledBoard>
-      {Object.values(state.lists)
-      .sort((a, b) => a.index - b.index)
-      .map((l) => (
-        <List
-          list={l}
-          key={l.id}
-          onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
-          onCancel={() => dispatch({ type: "addCancel" })}
-          onAdd={(text) => dispatch({ type: "confirmAdd", text })}
-          isAdding={l.id === state.addingOnList}
-        />
-      ))}
-    </StyledBoard>
+      <StyledBoard>
+        {Object.values(state.lists)
+          .sort((a, b) => a.index - b.index)
+          .map((l) => (
+            <List
+              list={l}
+              key={l.id}
+              onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
+              onCancel={() => dispatch({ type: "addCancel" })}
+              onAdd={(text) => dispatch({ type: "confirmAdd", text })}
+              isAdding={l.id === state.addingOnList}
+            />
+          ))}
+      </StyledBoard>
     </DragDropContext>
   );
 }

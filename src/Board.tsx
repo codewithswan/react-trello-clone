@@ -1,11 +1,12 @@
-import React, { useReducer } from "react";
+import React from "react";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { List } from "./List";
-import data from "./data";
-import { reducer } from "./reducer";
 
 import { DragDropContext } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
+import { BoardData } from "./state/types";
+import { useAppDispatch } from "./state/store";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -20,28 +21,28 @@ export const StyledBoard = styled.div`
 `;
 
 export function Board() {
-  const [state, dispatch] = useReducer(reducer, data);
-
-  console.log('rendering ', state)
+  const state: BoardData = useSelector((state: BoardData) => state);
+  const appDispatch = useAppDispatch();
+  console.log("rendering ", state);
 
   return (
     <DragDropContext
-      onDragEnd={(result: any) => dispatch({ type: "dragEnd", result })}
+      onDragEnd={(result: any) => appDispatch({ type: "dragEnd", result })}
     >
-    <StyledBoard>
-      {Object.values(state.lists)
-      .sort((a, b) => a.index - b.index)
-      .map((l) => (
-        <List
-          list={l}
-          key={l.id}
-          onStartAdd={() => dispatch({ type: "startAdd", listId: l.id })}
-          onCancel={() => dispatch({ type: "addCancel" })}
-          onAdd={(text) => dispatch({ type: "confirmAdd", text })}
-          isAdding={l.id === state.addingOnList}
-        />
-      ))}
-    </StyledBoard>
+      <StyledBoard>
+        {Object.values(state.lists)
+          .sort((a, b) => a.index - b.index)
+          .map((l) => (
+            <List
+              list={l}
+              key={l.id}
+              onStartAdd={() => appDispatch({ type: "startAdd", listId: l.id })}
+              onCancel={() => appDispatch({ type: "addCancel" })}
+              onAdd={(text) => appDispatch({ type: "confirmAdd", text })}
+              isAdding={l.id === state.addingOnList}
+            />
+          ))}
+      </StyledBoard>
     </DragDropContext>
   );
 }

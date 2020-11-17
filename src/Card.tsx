@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { colors, rounded } from "./styles/constants";
-import { CardData } from "./data";
 import { Draggable } from "react-beautiful-dnd";
+import { CardData } from "./state/types";
 
 export const StyledCard = styled.div`
   background-color: ${colors.white};
@@ -19,15 +19,17 @@ interface CardProps {
 
 export function Card(props: CardProps) {
   const { card } = props;
-  return <Draggable key={card.id} draggableId={card.id} index={card.index}>
-  {(provided) => (
-    <StyledCard
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-    >
-      {card.text}
-    </StyledCard>
-  )}
-</Draggable>
+  return (
+    <Draggable key={card.id} draggableId={card.id} index={card.index}>
+      {(provided) => (
+        <StyledCard
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {card.text}
+        </StyledCard>
+      )}
+    </Draggable>
+  );
 }

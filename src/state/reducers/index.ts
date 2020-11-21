@@ -1,8 +1,7 @@
 import { v4 } from "uuid";
 import { produce } from "immer";
-import { DropResult } from "react-beautiful-dnd";
 import { positionIndexedItem } from "../../lib/positionIndexedItem";
-import { BoardData } from "../types";
+import { BoardAction, BoardData } from "../types";
 
 const listId1 = v4();
 const listId2 = v4();
@@ -39,37 +38,10 @@ const initialData = {
   },
 } as BoardData;
 
-interface StartAddAction {
-  type: "startAdd";
-  listId: string;
-}
-
-interface AddCancel {
-  type: "addCancel";
-}
-
-interface ConfirmAddAction {
-  type: "confirmAdd";
-  text: string;
-}
-
-interface DragEndAction {
-  type: "dragEnd";
-  result: DropResult;
-}
-
-type BoardAction =
-  | StartAddAction
-  | AddCancel
-  | ConfirmAddAction
-  | DragEndAction;
-
 export default function reducer(
   state: BoardData = initialData,
   action: BoardAction
 ): BoardData {
-  console.log("received action ", action);
-
   switch (action.type) {
     case "startAdd":
       return produce(state, (s) => {
@@ -120,6 +92,11 @@ export default function reducer(
         s.lists[targetListId].cards = updatedCards;
       });
     }
+
+    case "fetchBoards/fulfilled":
+      return produce(state, (s) => {
+        s.lists = action.payload[0].lists;
+      });
   }
 
   return state;

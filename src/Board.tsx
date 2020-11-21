@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { List } from "./List";
@@ -7,6 +7,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { BoardData } from "./state/types";
 import { useAppDispatch } from "./state/store";
+import { fetchBoards } from "./state/actions";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -23,7 +24,10 @@ export const StyledBoard = styled.div`
 export function Board() {
   const state: BoardData = useSelector((state: BoardData) => state);
   const appDispatch = useAppDispatch();
-  console.log("rendering ", state);
+
+  useEffect(() => {
+    appDispatch(fetchBoards());
+  }, [appDispatch]);
 
   return (
     <DragDropContext

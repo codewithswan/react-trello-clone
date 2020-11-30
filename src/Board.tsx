@@ -5,9 +5,8 @@ import { List } from "./List";
 
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import { BoardData } from "./state/types";
 import { useAppDispatch } from "./state/store";
-import { fetchBoards } from "./state/actions";
+import { BoardState, actions } from "./state/features/boardDetails";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -22,16 +21,16 @@ export const StyledBoard = styled.div`
 `;
 
 export function Board() {
-  const state: BoardData = useSelector((state: BoardData) => state);
+  const state: BoardState = useSelector((state: BoardState) => state);
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
-    appDispatch(fetchBoards());
+    appDispatch(actions.fetchBoards());
   }, [appDispatch]);
 
   return (
     <DragDropContext
-      onDragEnd={(result: any) => appDispatch({ type: "dragEnd", result })}
+      onDragEnd={(result: any) => appDispatch(actions.dragEnd(result))}
     >
       <StyledBoard>
         {Object.values(state.lists)
@@ -40,9 +39,9 @@ export function Board() {
             <List
               list={l}
               key={l.id}
-              onStartAdd={() => appDispatch({ type: "startAdd", listId: l.id })}
-              onCancel={() => appDispatch({ type: "addCancel" })}
-              onAdd={(text) => appDispatch({ type: "confirmAdd", text })}
+              onStartAdd={() => appDispatch(actions.startAdd(l.id))}
+              onCancel={() => appDispatch(actions.cancelAdd())}
+              onAdd={(text) => appDispatch(actions.confirmAdd(text))}
               isAdding={l.id === state.addingOnList}
             />
           ))}

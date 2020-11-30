@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { colors, rounded } from "./styles/constants";
 import { Draggable } from "react-beautiful-dnd";
-import { CardData } from "./state/types";
+import { Card as CardData } from "./api/boards";
 
 export const StyledCard = styled.div`
   background-color: ${colors.white};

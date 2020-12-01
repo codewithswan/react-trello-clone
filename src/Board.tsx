@@ -5,8 +5,8 @@ import { List } from "./List";
 
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "./state/store";
-import { BoardState, actions } from "./state/features/boardDetails";
+import { useAppDispatch } from "./store";
+import { BoardState, actions } from "./features/boardDetails";
 
 export const StyledBoard = styled.div`
   display: flex;

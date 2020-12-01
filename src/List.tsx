@@ -5,7 +5,7 @@ import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { colors, rounded } from "./styles/constants";
 import { Droppable } from "react-beautiful-dnd";
-import { List as ListData } from "./api/boards";
+import { List as ListData } from "./features/api/boards";
 
 const StyledList = styled.div`
   background-color: ${colors.gray200};

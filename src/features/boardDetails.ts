@@ -2,10 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 
-// import { AppThunk } from "../store";
-
-import boardsApi, { Board } from "../../api/boards";
-import { positionIndexedItem } from "../../lib/positionIndexedItem";
+import boardsApi, { Board } from "./api/boards";
+import { positionIndexedItem } from "../lib/positionIndexedItem";
 
 export interface BoardState extends Board {
   addingOnList?: string;

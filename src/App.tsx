@@ -1,7 +1,7 @@
 import React from "react";
 import { Board } from "./Board";
 import { Provider } from "react-redux";
-import store from "./state/store";
+import store from "./store";
 
 function App() {
   return (

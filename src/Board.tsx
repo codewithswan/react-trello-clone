@@ -7,8 +7,8 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -32,24 +32,26 @@ export function Board() {
 
   useEffect(() => {
     if (state.error) {
-      toast.error(`🚨 ${state.error}`)
+      toast.error(`🚨 ${state.error}`);
     }
-  }, [state.error])
+  }, [state.error]);
+
+  if (state.loading) {
+    return <Spinner />;
+  }
 
   return (
-    <DragDropContext
-      onDragEnd={(result: any) => appDispatch(actions.dragEnd(result))}
-    >
+    <DragDropContext onDragEnd={(result: any) => appDispatch(actions.dragEnd(result))}>
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)
-          .map((l) => (
+          .map(l => (
             <List
               list={l}
               key={l.id}
               onStartAdd={() => appDispatch(actions.startAdd(l.id))}
               onCancel={() => appDispatch(actions.cancelAdd())}
-              onAdd={(text) => appDispatch(actions.confirmAdd(text))}
+              onAdd={text => appDispatch(actions.confirmAdd(text))}
               isAdding={l.id === state.addingOnList}
             />
           ))}

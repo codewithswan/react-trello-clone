@@ -8,16 +8,15 @@ import { positionIndexedItem } from "../lib/positionIndexedItem";
 export interface BoardState extends Board {
   addingOnList?: string;
   error?: string;
+  loading:boolean
 }
 
 const initialState: BoardState = {
   lists: {},
+  loading: false
 };
 
-export const fetchBoards = createAsyncThunk("boards/fetch", async () => {
-  const result = await boardsApi.fetchBoards();
-  return result;
-});
+export const fetchBoards = createAsyncThunk("boards/fetch", boardsApi.fetchBoards);
 
 const boardDetailsSlice = createSlice({
   name: "boardDetails",
@@ -70,12 +69,20 @@ const boardDetailsSlice = createSlice({
       action: PayloadAction<Board[]>
     ) => {
       state.lists = action.payload[0].lists;
+      state.loading = false
     },
     [fetchBoards.rejected.toString()]: (
       state,
       action: PayloadAction<string>
     ) => {
-      state.error = action.payload;
+      state.error = 'Error while loading board data';
+      state.loading = false
+    },
+    [fetchBoards.pending.toString()]: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.loading = true;
     },
   },
 });

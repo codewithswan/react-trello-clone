@@ -7,6 +7,8 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
+import { toast } from 'react-toastify';
+
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -27,6 +29,12 @@ export function Board() {
   useEffect(() => {
     appDispatch(actions.fetchBoards());
   }, [appDispatch]);
+
+  useEffect(() => {
+    if (state.error) {
+      toast.error(`🚨 ${state.error}`)
+    }
+  }, [state.error])
 
   return (
     <DragDropContext

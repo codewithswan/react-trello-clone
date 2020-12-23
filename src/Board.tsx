@@ -51,7 +51,7 @@ export function Board() {
               key={l.id}
               onStartAdd={() => appDispatch(actions.startAdd(l.id))}
               onCancel={() => appDispatch(actions.cancelAdd())}
-              onAdd={text => appDispatch(actions.confirmAdd(text))}
+              onAdd={text => appDispatch(actions.createCard(text))}
               isAdding={l.id === state.addingOnList}
             />
           ))}

@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DropResult } from "react-beautiful-dnd";
-import { v4 } from "uuid";
 
 import boardsApi, { Board, Card } from "./api/boards";
 import { positionIndexedItem } from "../lib/positionIndexedItem";
@@ -36,16 +35,6 @@ const boardDetailsSlice = createSlice({
     },
     cancelAdd(state) {
       state.addingOnList = undefined;
-    },
-    confirmAdd(state, action: PayloadAction<string>) {
-      const newId = v4();
-      const targetList = state.lists[state.addingOnList!];
-      state.addingOnList = undefined;
-      targetList.cards[newId] = {
-        id: newId,
-        text: action.payload,
-        index: Object.keys(targetList).length,
-      };
     },
     dragEnd(state, action: PayloadAction<DropResult>) {
       if (!action.payload.destination) {

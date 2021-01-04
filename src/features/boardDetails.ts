@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {  createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DropResult } from "react-beautiful-dnd";
 
 import boardsApi, { Board, Card } from "./api/boards";
@@ -26,6 +26,26 @@ export const createCard = createAsyncThunk("cards/create", (text: string, { getS
   });
 });
 
+export const moveCard = createAsyncThunk("cards/move", (dropResult: DropResult, { getState }) => {
+  if (!dropResult.destination) {
+    return;
+  }
+
+
+  const { id } = getState() as BoardState;
+  const targetListId = dropResult.destination.droppableId;
+  const targetIndex = dropResult.destination.index;
+  const sourceListId = dropResult.source.droppableId;
+
+  return boardsApi.moveCard({
+    cardId: dropResult.draggableId,
+    boardId: id,
+    sourceListId,
+    targetIndex,
+    targetListId,
+  });
+});
+
 const boardDetailsSlice = createSlice({
   name: "boardDetails",
   initialState,
@@ -35,25 +55,6 @@ const boardDetailsSlice = createSlice({
     },
     cancelAdd(state) {
       state.addingOnList = undefined;
-    },
-    dragEnd(state, action: PayloadAction<DropResult>) {
-      if (!action.payload.destination) {
-        return state;
-      }
-
-      const targetListId = action.payload.destination.droppableId;
-      const targetIndex = action.payload.destination.index;
-
-      const sourceListId = action.payload.source.droppableId;
-      const sourceItem = state.lists[sourceListId].cards[action.payload.draggableId];
-
-      if (sourceListId !== targetListId) {
-        delete state.lists[sourceListId].cards[sourceItem.id];
-      }
-
-      const updatedCards = positionIndexedItem(state.lists[targetListId].cards, sourceItem, targetIndex);
-
-      state.lists[targetListId].cards = updatedCards;
     },
   },
   extraReducers: {
@@ -73,7 +74,6 @@ const boardDetailsSlice = createSlice({
 
     [createCard.fulfilled.toString()]: (state, action: PayloadAction<Card>) => {
       state.lists[state.addingOnList!].cards[action.payload.id] = action.payload;
-      state.addingOnList = undefined;
       state.loading = false;
     },
     [createCard.rejected.toString()]: (state, action: PayloadAction<string>) => {
@@ -83,9 +83,40 @@ const boardDetailsSlice = createSlice({
     [createCard.pending.toString()]: (state, action: PayloadAction<string>) => {
       state.loading = true;
     },
+
+
+    [moveCard.fulfilled.toString()]: (state, action: PayloadAction<any>) => {
+      state.loading = false;
+    },
+    [moveCard.rejected.toString()]: (state, action: PayloadAction<string>) => {
+      state.error = "Error while moving card";
+      state.loading = false;
+    },
+    [moveCard.pending.toString()]: (state, action: { meta: {arg: DropResult}}) => {
+      const dropResult = action.meta.arg
+
+      if (!dropResult.destination) {
+        return
+      }
+
+      const targetListId = dropResult.destination.droppableId;
+      const targetIndex = dropResult.destination.index;
+
+      const sourceListId = dropResult.source.droppableId;
+      const sourceItem = state.lists[sourceListId].cards[dropResult.draggableId];
+
+      if (sourceListId !== targetListId) {
+        delete state.lists[sourceListId].cards[sourceItem.id];
+      }
+
+      const updatedCards = positionIndexedItem(state.lists[targetListId].cards, sourceItem, targetIndex);
+
+      state.lists[targetListId].cards = updatedCards;
+      state.loading = true
+    },
   },
 });
 
-export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard };
+export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard };
 
 export default boardDetailsSlice.reducer;

@@ -41,7 +41,7 @@ export function Board() {
   }
 
   return (
-    <DragDropContext onDragEnd={(result: any) => appDispatch(actions.dragEnd(result))}>
+    <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)

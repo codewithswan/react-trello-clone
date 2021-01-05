@@ -4,8 +4,8 @@ import { colors, rounded } from "./styles/constants";
 import { Draggable } from "react-beautiful-dnd";
 import { Card as CardData } from "./features/api/boards";
 
-export const StyledCard = styled.div`
-  background-color: ${colors.white};
+export const StyledCard = styled.div<any>`
+  background-color: ${props => props.isPending ? colors.gray300 : colors.white};
   box-shadow: 0 1px 0 rgba(9, 30, 66, 0.4);
   margin-top: 10px;
   margin-bottom: 10px;
@@ -14,11 +14,12 @@ export const StyledCard = styled.div`
 `;
 
 interface CardProps {
-  card: CardData;
+  card: CardData
+  isPending: boolean
 }
 
 export function Card(props: CardProps) {
-  const { card } = props;
+  const { card, isPending } = props;
   return (
     <Draggable key={card.id} draggableId={card.id} index={card.index}>
       {(provided) => (
@@ -26,6 +27,7 @@ export function Card(props: CardProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          isPending={isPending}
         >
           {card.text}
         </StyledCard>

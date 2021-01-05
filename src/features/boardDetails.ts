@@ -8,12 +8,16 @@ export interface BoardState extends Board {
   addingOnList?: string;
   error?: string;
   loading: boolean;
+  pendingCards: {
+    [key: string]: boolean
+  }
 }
 
 const initialState: BoardState = {
   lists: {},
   loading: false,
   id: "",
+  pendingCards: {}
 };
 
 export const fetchBoards = createAsyncThunk("boards/fetch", boardsApi.fetchBoards);
@@ -84,13 +88,12 @@ const boardDetailsSlice = createSlice({
       state.loading = true;
     },
 
-
-    [moveCard.fulfilled.toString()]: (state, action: PayloadAction<any>) => {
-      state.loading = false;
+    [moveCard.fulfilled.toString()]: (state, action: { meta: { arg: DropResult }}) => {
+      delete state.pendingCards[action.meta.arg.draggableId]
     },
-    [moveCard.rejected.toString()]: (state, action: PayloadAction<string>) => {
+    [moveCard.rejected.toString()]: (state, action: { meta: { arg: DropResult }}) => {
       state.error = "Error while moving card";
-      state.loading = false;
+      delete state.pendingCards[action.meta.arg.draggableId]
     },
     [moveCard.pending.toString()]: (state, action: { meta: {arg: DropResult}}) => {
       const dropResult = action.meta.arg
@@ -112,7 +115,7 @@ const boardDetailsSlice = createSlice({
       const updatedCards = positionIndexedItem(state.lists[targetListId].cards, sourceItem, targetIndex);
 
       state.lists[targetListId].cards = updatedCards;
-      state.loading = true
+      state.pendingCards[sourceItem.id] = true
     },
   },
 });

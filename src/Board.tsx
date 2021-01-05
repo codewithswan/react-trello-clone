@@ -9,6 +9,7 @@ import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
+import Modal from 'react-modal';
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -42,6 +43,22 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
+        <Modal
+          isOpen
+          contentLabel="Example Modal"
+        >
+
+          <h2 >Hello</h2>
+          {/*<button onClick={closeModal}>close</button>*/}
+          <div>I am a modal</div>
+          <form>
+            <input />
+            <button>tab navigation</button>
+            <button>stays</button>
+            <button>inside</button>
+            <button>the modal</button>
+          </form>
+        </Modal>
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)

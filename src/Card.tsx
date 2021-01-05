@@ -16,18 +16,20 @@ export const StyledCard = styled.div<any>`
 interface CardProps {
   card: CardData
   isPending: boolean
+  onStartEdit: (id: string) => void
 }
 
 export function Card(props: CardProps) {
-  const { card, isPending } = props;
+  const { card, isPending, onStartEdit } = props;
   return (
-    <Draggable key={card.id} draggableId={card.id} index={card.index}>
+    <Draggable key={card.id} draggableId={card.id} index={card.index} >
       {(provided) => (
         <StyledCard
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           isPending={isPending}
+          onClick={() => onStartEdit(card.id)}
         >
           {card.text}
         </StyledCard>

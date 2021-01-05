@@ -27,10 +27,11 @@ interface ListProps {
   onCancel: () => void;
   onAdd: (text: string) => void;
   pendingCards: { [key: string ]: boolean}
+  onStartEdit: (id: string) => void
 }
 
 export function List(props: ListProps) {
-  const { list, onStartAdd, isAdding, onCancel, onAdd, pendingCards } = props;
+  const { list, onStartAdd, isAdding, onCancel, onAdd, pendingCards, onStartEdit } = props;
 
   return (
     <Droppable droppableId={list.id}>
@@ -40,7 +41,7 @@ export function List(props: ListProps) {
           {Object.values(list.cards)
             .sort((a, b) => a.index - b.index)
             .map((card) => (
-              <Card card={card} isPending={pendingCards[card.id]} key={card.id}></Card>
+              <Card card={card} isPending={pendingCards[card.id]} onStartEdit={onStartEdit} key={card.id} />
             ))}
           {provided.placeholder}
           {!isAdding && <AddButton onClick={onStartAdd} />}

@@ -53,6 +53,7 @@ export function Board() {
               onCancel={() => appDispatch(actions.cancelAdd())}
               onAdd={text => appDispatch(actions.createCard(text))}
               isAdding={l.id === state.addingOnList}
+              onStartEdit={(id:string) => appDispatch(actions.startEdit(id))}
               pendingCards={state.pendingCards}
             />
           ))}

@@ -11,7 +11,7 @@ export interface BoardState extends Board {
   pendingCards: {
     [key: string]: boolean
   }
-  editingCard?: string
+  editingCard?: Card
 }
 
 const initialState: BoardState = {
@@ -61,7 +61,7 @@ const boardDetailsSlice = createSlice({
     cancelAdd(state) {
       state.addingOnList = undefined;
     },
-    startEdit(state, action: PayloadAction<string>) {
+    startEdit(state, action: PayloadAction<Card>) {
       state.editingCard = action.payload;
       state.addingOnList = undefined;
     },

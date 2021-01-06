@@ -12,3 +12,7 @@ export const rounded = {
   max: "8px",
   mid: "4px",
 };
+
+export const textSizes = {
+  h1: "30px"
+}

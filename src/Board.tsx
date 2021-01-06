@@ -9,7 +9,8 @@ import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
-import Modal from 'react-modal';
+import BoardDetails from "./CardDetail";
+import { Card } from "./features/api/boards";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -25,6 +26,15 @@ export const StyledBoard = styled.div`
 
 export function Board() {
   const state: BoardState = useSelector((state: BoardState) => state);
+  // const editingCard: Card | undefined = useSelector((state: BoardState) => {
+  //   if (!state.editingCard) {
+  //     return undefined
+  //   }
+  //
+  //   // kort 'n manier om vinnig 'n kaart te kry, maak nie saak watter lys dit in is nie
+  //   // Dalk moet ek net die actual kaart stoor op editing card
+  //   return
+  // })
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
@@ -43,22 +53,7 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
-        <Modal
-          isOpen
-          contentLabel="Example Modal"
-        >
-
-          <h2 >Hello</h2>
-          {/*<button onClick={closeModal}>close</button>*/}
-          <div>I am a modal</div>
-          <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form>
-        </Modal>
+      <BoardDetails card={state.editingCard} />
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)
@@ -70,7 +65,7 @@ export function Board() {
               onCancel={() => appDispatch(actions.cancelAdd())}
               onAdd={text => appDispatch(actions.createCard(text))}
               isAdding={l.id === state.addingOnList}
-              onStartEdit={(id:string) => appDispatch(actions.startEdit(id))}
+              onStartEdit={(card:Card) => appDispatch(actions.startEdit(card))}
               pendingCards={state.pendingCards}
             />
           ))}

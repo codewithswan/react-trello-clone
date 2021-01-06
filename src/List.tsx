@@ -5,7 +5,8 @@ import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { colors, rounded } from "./styles/constants";
 import { Droppable } from "react-beautiful-dnd";
-import { List as ListData } from "./features/api/boards";
+import { List as ListData, Card as CardData } from "./features/api/boards";
+import { H1 } from "./components/headings";
 
 const StyledList = styled.div`
   background-color: ${colors.gray200};
@@ -15,10 +16,6 @@ const StyledList = styled.div`
   padding: 10px;
 `;
 
-const ListHeading = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-`;
 
 interface ListProps {
   isAdding: boolean;
@@ -27,7 +24,7 @@ interface ListProps {
   onCancel: () => void;
   onAdd: (text: string) => void;
   pendingCards: { [key: string ]: boolean}
-  onStartEdit: (id: string) => void
+  onStartEdit: (card: CardData) => void
 }
 
 export function List(props: ListProps) {
@@ -37,7 +34,7 @@ export function List(props: ListProps) {
     <Droppable droppableId={list.id}>
       {(provided, snapshot) => (
         <StyledList ref={provided.innerRef}>
-          <ListHeading>{list.name}</ListHeading>
+          <H1>{list.name}</H1>
           {Object.values(list.cards)
             .sort((a, b) => a.index - b.index)
             .map((card) => (

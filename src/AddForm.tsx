@@ -1,23 +1,13 @@
 import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
-import { colors, rounded } from "./styles/constants";
+import { colors } from "./styles/constants";
 import { StyledCard } from "./Card";
+import { SubmitButton } from "./components/forms";
 
 const StyledConfirmContainer = styled.div`
   display: flex;
 `;
 
-const StyledAddConfirmButton = styled.div`
-  background-color: ${colors.gray900};
-  color: ${colors.gray100};
-  border-radius: ${rounded.mid};
-  cursor: pointer;
-  padding: 8px;
-
-  &:hover {
-    background-color: ${colors.gray500};
-  }
-`;
 
 const StyledCancelAddButton = styled.div`
   cursor: pointer;
@@ -71,9 +61,9 @@ export function AddForm(props: AddFormProps) {
       </StyledCard>
 
       <StyledConfirmContainer>
-        <StyledAddConfirmButton onClick={handleAddConfirm}>
+        <SubmitButton onClick={handleAddConfirm}>
           Add Card
-        </StyledAddConfirmButton>
+        </SubmitButton>
         <StyledCancelAddButton onClick={onCancel}>
           <i className="icofont-close-line icofont-2x"></i>
         </StyledCancelAddButton>

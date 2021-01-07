@@ -52,7 +52,7 @@ export const moveCard = createAsyncThunk("cards/move", (dropResult: DropResult, 
   });
 });
 
-export const updateCard = createAsyncThunk("cards/update", (attributes : { text: string }, { getState }) => {
+export const updateCard = createAsyncThunk("cards/update", (attributes : { text?: string, description?: string }, { getState }) => {
   const { editingCard, id } = getState() as BoardState;
   if (!editingCard){
     return
@@ -141,12 +141,22 @@ const boardDetailsSlice = createSlice({
       state.pendingCards[sourceItem.id] = true
     },
 
-    [updateCard.fulfilled.toString()]: (state, action: { meta: {arg: { text: string}}}) => {
+    [updateCard.fulfilled.toString()]: (state, action: { meta: {arg: { text?: string, description?: string }}}) => {
       if (!state.editingCard) {
         return
       }
 
-      state.lists[state.editingCard.listId].cards[state.editingCard.id].text = action.meta.arg.text
+      const { text, description } = action.meta.arg
+
+      const card = state.lists[state.editingCard.listId].cards[state.editingCard.id]
+
+      if (text) {
+        card.text = text
+      }
+
+      if (description) {
+        card.description = description
+      }
     }
   },
 });

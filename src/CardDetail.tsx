@@ -4,12 +4,13 @@ import Modal from "react-modal";
 import { Card as CardData } from "./features/api/boards";
 import { HeadingInput } from "./components/forms";
 import styled from "styled-components";
-import { colors, rounded } from "./styles/constants";
+import { colors } from "./styles/constants";
 import { H3 } from "./components/headings";
+import { DescriptionEdit } from "./DescriptionEdit";
 
 interface CardDetailProps {
   card?: CardData
-  onSave: (attributes: { text: string }) => void
+  onSave: (attributes: { text?: string; description?: string }) => void
   onClose: () => void
 }
 
@@ -47,13 +48,6 @@ const ContentContainer = styled.div`
   justify-content: space-between;
 `
 
-const StyledAddTextArea = styled.textarea`
-  border: 1px solid ${colors.gray300};
-  width: 100%;
-  height: 80px;
-  font-size: 15px;
-`;
-
 const RightContainer = styled.div`
   width: 150px;
   margin-left: 30px;
@@ -63,18 +57,9 @@ const LeftContainer = styled.div`
   flex: 1;
 `
 
-const DescriptionLabel = styled.div`
-  cursor: pointer;
-  background-color: ${colors.gray200};
-  border-radius: ${rounded.mid};
-  padding: 20px;
-  padding-bottom: 50px;
-`
-
 export default function CardDetail(props: CardDetailProps) {
   const { card, onSave, onClose } = props;
 
-  const [editingDescription, setEditingDescription ] = useState(false)
   const [cardText, setCardText] = useState(card?.text);
   useEffect(() => {
     if (!card) {
@@ -115,8 +100,7 @@ export default function CardDetail(props: CardDetailProps) {
     <ContentContainer>
       <LeftContainer>
         <H3>Description</H3>
-        {!editingDescription && <DescriptionLabel onClick={() => setEditingDescription(true)}>Add a description...</DescriptionLabel>}
-        {editingDescription && <StyledAddTextArea />}
+        <DescriptionEdit onSubmit={(description) => onSave({ description })} description={card.description}  />
       </LeftContainer>
       <RightContainer>
         <H3>Actions</H3>

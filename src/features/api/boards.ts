@@ -1,5 +1,6 @@
 export interface Card {
   text: string;
+  description?: string
   id: string;
   index: number;
 }
@@ -81,7 +82,7 @@ async function moveCard({
                           boardId,
                           cardId,
                           attributes
-                        }: { boardId: string; cardId: string; attributes: { text: string } }): Promise<any> {
+                        }: { boardId: string; cardId: string; attributes: { text?: string; description?: string } }): Promise<any> {
 
   const response = await fetch(`http://localhost:3001/boards/${boardId}/cards/${cardId}`, {
     method: "PUT",

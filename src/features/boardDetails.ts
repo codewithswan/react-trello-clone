@@ -115,10 +115,6 @@ const boardDetailsSlice = createSlice({
     },
     [createCard.rejected.toString()]: (state, action: PayloadAction<string>) => {
       state.error = "Error while saving card";
-      state.loading = false;
-    },
-    [createCard.pending.toString()]: (state, action: PayloadAction<string>) => {
-      state.loading = true;
     },
 
     [moveCard.fulfilled.toString()]: (state, action: { meta: { arg: DropResult }}) => {

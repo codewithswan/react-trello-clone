@@ -11,7 +11,7 @@ export interface BoardState extends Board {
   pendingCards: {
     [key: string]: boolean
   }
-  editingCard?: Card
+  editingCard?: Card & { listId: string}
 }
 
 const initialState: BoardState = {
@@ -22,6 +22,7 @@ const initialState: BoardState = {
 };
 
 export const fetchBoards = createAsyncThunk("boards/fetch", boardsApi.fetchBoards);
+
 export const createCard = createAsyncThunk("cards/create", (text: string, { getState }) => {
   const { addingOnList, id } = getState() as BoardState;
   return boardsApi.createCard({
@@ -51,6 +52,20 @@ export const moveCard = createAsyncThunk("cards/move", (dropResult: DropResult, 
   });
 });
 
+export const updateCard = createAsyncThunk("cards/update", (attributes : { text: string }, { getState }) => {
+  const { editingCard, id } = getState() as BoardState;
+  if (!editingCard){
+    return
+  }
+
+
+  return boardsApi.updateCard({
+    boardId: id,
+    cardId: editingCard?.id,
+    attributes,
+  });
+});
+
 const boardDetailsSlice = createSlice({
   name: "boardDetails",
   initialState,
@@ -61,10 +76,13 @@ const boardDetailsSlice = createSlice({
     cancelAdd(state) {
       state.addingOnList = undefined;
     },
-    startEdit(state, action: PayloadAction<Card>) {
+    startEdit(state, action: PayloadAction<Card & { listId: string }>) {
       state.editingCard = action.payload;
       state.addingOnList = undefined;
     },
+    cancelEdit(state) {
+      state.editingCard = undefined
+    }
   },
   extraReducers: {
     [fetchBoards.fulfilled.toString()]: (state, action: PayloadAction<Board[]>) => {
@@ -122,9 +140,17 @@ const boardDetailsSlice = createSlice({
       state.lists[targetListId].cards = updatedCards;
       state.pendingCards[sourceItem.id] = true
     },
+
+    [updateCard.fulfilled.toString()]: (state, action: { meta: {arg: { text: string}}}) => {
+      if (!state.editingCard) {
+        return
+      }
+
+      state.lists[state.editingCard.listId].cards[state.editingCard.id].text = action.meta.arg.text
+    }
   },
 });
 
-export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard };
+export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard, updateCard };
 
 export default boardDetailsSlice.reducer;

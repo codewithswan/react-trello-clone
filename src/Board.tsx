@@ -53,7 +53,7 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
-      <BoardDetails card={state.editingCard} />
+      <BoardDetails card={state.editingCard} onClose={() => appDispatch(actions.cancelEdit())} onSave={(attributes: { text: string }) => appDispatch(actions.updateCard(attributes))} />
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)
@@ -65,7 +65,7 @@ export function Board() {
               onCancel={() => appDispatch(actions.cancelAdd())}
               onAdd={text => appDispatch(actions.createCard(text))}
               isAdding={l.id === state.addingOnList}
-              onStartEdit={(card:Card) => appDispatch(actions.startEdit(card))}
+              onStartEdit={(card:Card) => appDispatch(actions.startEdit({... card, listId: l.id}))}
               pendingCards={state.pendingCards}
             />
           ))}

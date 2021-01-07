@@ -77,8 +77,31 @@ async function moveCard({
   }
 }
 
+ async function updateCard({
+                          boardId,
+                          cardId,
+                          attributes
+                        }: { boardId: string; cardId: string; attributes: { text: string } }): Promise<any> {
+
+  const response = await fetch(`http://localhost:3001/boards/${boardId}/cards/${cardId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(attributes),
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    console.log(response.statusText)
+    throw new Error(`We got an error ${response.status}`);
+  }
+}
+
 export default {
   fetchBoards,
   createCard,
   moveCard,
+  updateCard,
 };

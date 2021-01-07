@@ -19,3 +19,19 @@ export const SubmitButton = styled.button`
     background-color: ${colors.gray500};
   }
 `
+
+export const IconButton = styled.button`
+  padding: 10px 5px 10px 5px;
+  margin-top: 16px;
+  font-size: 18px;
+  color: ${colors.gray500};
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  border-radius: ${rounded.mid};
+
+  :hover {
+    background-color: ${colors.gray300};
+  }
+`

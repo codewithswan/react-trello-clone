@@ -66,6 +66,16 @@ export const updateCard = createAsyncThunk("cards/update", (attributes : { text?
   });
 });
 
+export const archiveCard = createAsyncThunk("cards/archive", (_, { getState }) => {
+  const { editingCard, id } = getState() as BoardState;
+  if (!editingCard){
+    return
+  }
+
+
+  return boardsApi.archiveCard({ cardId: editingCard.id, boardId: id });
+});
+
 const boardDetailsSlice = createSlice({
   name: "boardDetails",
   initialState,
@@ -157,10 +167,20 @@ const boardDetailsSlice = createSlice({
       if (description) {
         card.description = description
       }
+    },
+
+
+    [archiveCard.fulfilled.toString()]: (state) => {
+      if (!state.editingCard) {
+        return
+      }
+
+      delete state.lists[state.editingCard.listId].cards[state.editingCard.id]
+      state.editingCard = undefined
     }
   },
 });
 
-export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard, updateCard };
+export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard, updateCard, archiveCard };
 
 export default boardDetailsSlice.reducer;

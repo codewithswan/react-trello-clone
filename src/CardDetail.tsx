@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
 
 import { Card as CardData } from "./features/api/boards";
-import { HeadingInput } from "./components/forms";
+import { HeadingInput, IconButton } from "./components/forms";
 import styled from "styled-components";
 import { colors } from "./styles/constants";
 import { H3 } from "./components/headings";
@@ -12,6 +12,7 @@ interface CardDetailProps {
   card?: CardData
   onSave: (attributes: { text?: string; description?: string }) => void
   onClose: () => void
+  onArchive: () => void
 }
 
 const customStyles = {
@@ -58,7 +59,7 @@ const LeftContainer = styled.div`
 `
 
 export default function CardDetail(props: CardDetailProps) {
-  const { card, onSave, onClose } = props;
+  const { card, onSave, onClose, onArchive } = props;
 
   const [cardText, setCardText] = useState(card?.text);
   useEffect(() => {
@@ -104,6 +105,9 @@ export default function CardDetail(props: CardDetailProps) {
       </LeftContainer>
       <RightContainer>
         <H3>Actions</H3>
+          <IconButton onClick={onArchive}>
+            <i className="icofont-trash icofont-1x"></i> Archive
+          </IconButton>
       </RightContainer>
     </ContentContainer>
   </Modal>;

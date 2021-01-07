@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { AddButton } from "./AddButton";
 import { AddForm } from "./AddForm";
 import { Card } from "./Card";
 import { colors, rounded } from "./styles/constants";
 import { Droppable } from "react-beautiful-dnd";
 import { List as ListData, Card as CardData } from "./features/api/boards";
 import { H1 } from "./components/headings";
+import { IconButton } from "./components/forms";
 
 const StyledList = styled.div`
   background-color: ${colors.gray200};
@@ -23,7 +23,7 @@ interface ListProps {
   onStartAdd: () => void;
   onCancel: () => void;
   onAdd: (text: string) => void;
-  pendingCards: { [key: string ]: boolean}
+  pendingCards: { [key: string]: boolean }
   onStartEdit: (card: CardData) => void
 }
 
@@ -41,7 +41,9 @@ export function List(props: ListProps) {
               <Card card={card} isPending={pendingCards[card.id]} onStartEdit={onStartEdit} key={card.id} />
             ))}
           {provided.placeholder}
-          {!isAdding && <AddButton onClick={onStartAdd} />}
+          {!isAdding && <IconButton onClick={onStartAdd}>
+            <i className="icofont-plus icofont-1x"></i> Add a card
+          </IconButton>}
           {isAdding && (
             <AddForm
               onStartAdd={onStartAdd}

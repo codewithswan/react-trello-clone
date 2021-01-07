@@ -15,7 +15,8 @@ export const rounded = {
 
 export const textSizes = {
   h1: "20px",
-  h2: "18px"
+  h2: "18px",
+  h3: "16px"
 }
 
 export const fontWeights = {

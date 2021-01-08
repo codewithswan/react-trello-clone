@@ -20,12 +20,13 @@ export const SubmitButton = styled.button`
   }
 `
 
-export const IconButton = styled.button`
+export const IconButton = styled.button<{ width?: string, backgroundColor?: string, marginTop?: string }>`
   padding: 10px 5px 10px 5px;
-  margin-top: 16px;
+  margin-top: ${props => props.marginTop ?? '16px'}px;
   font-size: 18px;
   color: ${colors.gray500};
-  width: 100%;
+  width: ${(props) => props.width ?? '100%'};
+  background-color: ${(props) => props.backgroundColor ?? 'inherit'};
   text-align: left;
   border: none;
   cursor: pointer;

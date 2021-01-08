@@ -1,4 +1,4 @@
-import {  createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DropResult } from "react-beautiful-dnd";
 
 import boardsApi, { Board, Card } from "./api/boards";
@@ -9,16 +9,18 @@ export interface BoardState extends Board {
   error?: string;
   loading: boolean;
   pendingCards: {
-    [key: string]: boolean
-  }
-  editingCard?: Card & { listId: string}
+    [key: string]: boolean;
+  };
+  editingCard?: Card & { listId: string };
+  addingNewList: boolean;
 }
 
 const initialState: BoardState = {
   lists: {},
   loading: false,
   id: "",
-  pendingCards: {}
+  pendingCards: {},
+  addingNewList: false,
 };
 
 export const fetchBoards = createAsyncThunk("boards/fetch", boardsApi.fetchBoards);
@@ -37,7 +39,6 @@ export const moveCard = createAsyncThunk("cards/move", (dropResult: DropResult, 
     return;
   }
 
-
   const { id } = getState() as BoardState;
   const targetListId = dropResult.destination.droppableId;
   const targetIndex = dropResult.destination.index;
@@ -52,12 +53,11 @@ export const moveCard = createAsyncThunk("cards/move", (dropResult: DropResult, 
   });
 });
 
-export const updateCard = createAsyncThunk("cards/update", (attributes : { text?: string, description?: string }, { getState }) => {
+export const updateCard = createAsyncThunk("cards/update", (attributes: { text?: string; description?: string }, { getState }) => {
   const { editingCard, id } = getState() as BoardState;
-  if (!editingCard){
-    return
+  if (!editingCard) {
+    return;
   }
-
 
   return boardsApi.updateCard({
     boardId: id,
@@ -68,10 +68,9 @@ export const updateCard = createAsyncThunk("cards/update", (attributes : { text?
 
 export const archiveCard = createAsyncThunk("cards/archive", (_, { getState }) => {
   const { editingCard, id } = getState() as BoardState;
-  if (!editingCard){
-    return
+  if (!editingCard) {
+    return;
   }
-
 
   return boardsApi.archiveCard({ cardId: editingCard.id, boardId: id });
 });
@@ -91,8 +90,14 @@ const boardDetailsSlice = createSlice({
       state.addingOnList = undefined;
     },
     cancelEdit(state) {
-      state.editingCard = undefined
-    }
+      state.editingCard = undefined;
+    },
+    startAddList(state) {
+      state.addingNewList = true;
+    },
+    cancelAddList(state) {
+      state.addingNewList = false;
+    },
   },
   extraReducers: {
     [fetchBoards.fulfilled.toString()]: (state, action: PayloadAction<Board[]>) => {
@@ -117,18 +122,18 @@ const boardDetailsSlice = createSlice({
       state.error = "Error while saving card";
     },
 
-    [moveCard.fulfilled.toString()]: (state, action: { meta: { arg: DropResult }}) => {
-      delete state.pendingCards[action.meta.arg.draggableId]
+    [moveCard.fulfilled.toString()]: (state, action: { meta: { arg: DropResult } }) => {
+      delete state.pendingCards[action.meta.arg.draggableId];
     },
-    [moveCard.rejected.toString()]: (state, action: { meta: { arg: DropResult }}) => {
+    [moveCard.rejected.toString()]: (state, action: { meta: { arg: DropResult } }) => {
       state.error = "Error while moving card";
-      delete state.pendingCards[action.meta.arg.draggableId]
+      delete state.pendingCards[action.meta.arg.draggableId];
     },
-    [moveCard.pending.toString()]: (state, action: { meta: {arg: DropResult}}) => {
-      const dropResult = action.meta.arg
+    [moveCard.pending.toString()]: (state, action: { meta: { arg: DropResult } }) => {
+      const dropResult = action.meta.arg;
 
       if (!dropResult.destination) {
-        return
+        return;
       }
 
       const targetListId = dropResult.destination.droppableId;
@@ -144,36 +149,35 @@ const boardDetailsSlice = createSlice({
       const updatedCards = positionIndexedItem(state.lists[targetListId].cards, sourceItem, targetIndex);
 
       state.lists[targetListId].cards = updatedCards;
-      state.pendingCards[sourceItem.id] = true
+      state.pendingCards[sourceItem.id] = true;
     },
 
-    [updateCard.fulfilled.toString()]: (state, action: { meta: {arg: { text?: string, description?: string }}}) => {
+    [updateCard.fulfilled.toString()]: (state, action: { meta: { arg: { text?: string; description?: string } } }) => {
       if (!state.editingCard) {
-        return
+        return;
       }
 
-      const { text, description } = action.meta.arg
+      const { text, description } = action.meta.arg;
 
-      const card = state.lists[state.editingCard.listId].cards[state.editingCard.id]
+      const card = state.lists[state.editingCard.listId].cards[state.editingCard.id];
 
       if (text) {
-        card.text = text
+        card.text = text;
       }
 
       if (description) {
-        card.description = description
+        card.description = description;
       }
     },
 
-
-    [archiveCard.fulfilled.toString()]: (state) => {
+    [archiveCard.fulfilled.toString()]: state => {
       if (!state.editingCard) {
-        return
+        return;
       }
 
-      delete state.lists[state.editingCard.listId].cards[state.editingCard.id]
-      state.editingCard = undefined
-    }
+      delete state.lists[state.editingCard.listId].cards[state.editingCard.id];
+      state.editingCard = undefined;
+    },
   },
 });
 

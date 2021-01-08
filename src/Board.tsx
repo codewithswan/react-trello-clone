@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import BoardDetails from "./CardDetail";
 import { Card } from "./features/api/boards";
+import { ListForm } from "./ListForm";
 
 export const StyledBoard = styled.div`
   display: flex;
@@ -26,15 +27,6 @@ export const StyledBoard = styled.div`
 
 export function Board() {
   const state: BoardState = useSelector((state: BoardState) => state);
-  // const editingCard: Card | undefined = useSelector((state: BoardState) => {
-  //   if (!state.editingCard) {
-  //     return undefined
-  //   }
-  //
-  //   // kort 'n manier om vinnig 'n kaart te kry, maak nie saak watter lys dit in is nie
-  //   // Dalk moet ek net die actual kaart stoor op editing card
-  //   return
-  // })
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
@@ -53,9 +45,12 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
-      <BoardDetails card={state.editingCard} onClose={() => appDispatch(actions.cancelEdit())}
-                    onArchive={() => appDispatch(actions.archiveCard())}
-                    onSave={(attributes: { text?: string; description?: string }) => appDispatch(actions.updateCard(attributes))} />
+      <BoardDetails
+        card={state.editingCard}
+        onClose={() => appDispatch(actions.cancelEdit())}
+        onArchive={() => appDispatch(actions.archiveCard())}
+        onSave={(attributes: { text?: string; description?: string }) => appDispatch(actions.updateCard(attributes))}
+      />
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)
@@ -71,6 +66,12 @@ export function Board() {
               pendingCards={state.pendingCards}
             />
           ))}
+        <ListForm
+          onSubmit={() => console.log("adding new list")}
+          onCancel={() => appDispatch(actions.cancelAddList())}
+          showForm={state.addingNewList}
+          startAdd={() => appDispatch(actions.startAddList())}
+        />
       </StyledBoard>
     </DragDropContext>
   );

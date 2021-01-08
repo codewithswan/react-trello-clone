@@ -22,3 +22,7 @@ export const textSizes = {
 export const fontWeights = {
   heading: 700,
 }
+
+export const widths = {
+  list: 276,
+}

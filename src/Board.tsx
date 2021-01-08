@@ -67,7 +67,7 @@ export function Board() {
             />
           ))}
         <ListForm
-          onSubmit={() => console.log("adding new list")}
+          onSubmit={name => appDispatch(actions.createList(name))}
           onCancel={() => appDispatch(actions.cancelAddList())}
           showForm={state.addingNewList}
           startAdd={() => appDispatch(actions.startAddList())}

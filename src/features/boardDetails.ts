@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DropResult } from "react-beautiful-dnd";
 
-import boardsApi, { Board, Card } from "./api/boards";
+import boardsApi, { Board, Card, List } from "./api/boards";
 import { positionIndexedItem } from "../lib/positionIndexedItem";
 
 export interface BoardState extends Board {
@@ -73,6 +73,12 @@ export const archiveCard = createAsyncThunk("cards/archive", (_, { getState }) =
   }
 
   return boardsApi.archiveCard({ cardId: editingCard.id, boardId: id });
+});
+
+export const createList = createAsyncThunk("lists/create", (name: string, { getState }) => {
+  const { id } = getState() as BoardState;
+
+  return boardsApi.createList({ name, boardId: id });
 });
 
 const boardDetailsSlice = createSlice({
@@ -178,9 +184,14 @@ const boardDetailsSlice = createSlice({
       delete state.lists[state.editingCard.listId].cards[state.editingCard.id];
       state.editingCard = undefined;
     },
+
+    [createList.fulfilled.toString()]: (state: BoardState, action: PayloadAction<List>) => {
+      state.lists[action.payload.id] = action.payload;
+      state.addingNewList = false;
+    },
   },
 });
 
-export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard, updateCard, archiveCard };
+export const actions = { ...boardDetailsSlice.actions, fetchBoards, createCard, moveCard, updateCard, archiveCard, createList };
 
 export default boardDetailsSlice.reducer;

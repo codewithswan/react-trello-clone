@@ -25,7 +25,7 @@ export function List(props: ListProps) {
       {(provided, snapshot) => (
         <StyledList ref={provided.innerRef}>
           <H1>{list.name}</H1>
-          {Object.values(list.cards)
+          {Object.values(list.cards ?? {})
             .sort((a, b) => a.index - b.index)
             .map(card => (
               <Card card={card} isPending={pendingCards[card.id]} onStartEdit={onStartEdit} key={card.id} />

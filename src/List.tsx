@@ -6,6 +6,7 @@ import { List as ListData, Card as CardData } from "./features/api/boards";
 import { H1 } from "./components/headings";
 import { IconButton } from "./components/forms";
 import { StyledList } from "./components/lists";
+import styled from "styled-components";
 
 interface ListProps {
   isAdding: boolean;
@@ -17,6 +18,13 @@ interface ListProps {
   onStartEdit: (card: CardData) => void;
 }
 
+const MenuButtonContainer = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+`;
+
 export function List(props: ListProps) {
   const { list, onStartAdd, isAdding, onCancel, onAdd, pendingCards, onStartEdit } = props;
 
@@ -24,6 +32,11 @@ export function List(props: ListProps) {
     <Droppable droppableId={list.id}>
       {(provided, snapshot) => (
         <StyledList ref={provided.innerRef}>
+          <MenuButtonContainer>
+            <IconButton onClick={onStartAdd} width={"30px"}>
+              <i className="icofont-navigation-menu icofont-1x"></i>
+            </IconButton>
+          </MenuButtonContainer>
           <H1>{list.name}</H1>
           {Object.values(list.cards ?? {})
             .sort((a, b) => a.index - b.index)

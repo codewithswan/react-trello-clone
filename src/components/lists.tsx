@@ -7,4 +7,5 @@ export const StyledList = styled.div`
   border-radius: ${rounded.max};
   margin-right: 12px;
   padding: 10px;
+  position: relative;
 `;

@@ -9,7 +9,7 @@ import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
-import BoardDetails from "./CardDetail";
+import CardDetail from "./CardDetail";
 import { Card } from "./features/api/boards";
 import { ListForm } from "./ListForm";
 
@@ -45,7 +45,7 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
-      <BoardDetails
+      <CardDetail
         card={state.editingCard}
         onClose={() => appDispatch(actions.cancelEdit())}
         onArchive={() => appDispatch(actions.archiveCard())}

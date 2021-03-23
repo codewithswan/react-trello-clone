@@ -9,7 +9,7 @@ import { useAppDispatch } from "./store";
 import { BoardState, actions } from "./features/boardDetails";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
-import BoardDetails from "./CardDetail";
+import CardDetail from "./CardDetail";
 import { Card } from "./features/api/boards";
 
 export const StyledBoard = styled.div`
@@ -26,15 +26,6 @@ export const StyledBoard = styled.div`
 
 export function Board() {
   const state: BoardState = useSelector((state: BoardState) => state);
-  // const editingCard: Card | undefined = useSelector((state: BoardState) => {
-  //   if (!state.editingCard) {
-  //     return undefined
-  //   }
-  //
-  //   // kort 'n manier om vinnig 'n kaart te kry, maak nie saak watter lys dit in is nie
-  //   // Dalk moet ek net die actual kaart stoor op editing card
-  //   return
-  // })
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
@@ -53,7 +44,11 @@ export function Board() {
 
   return (
     <DragDropContext onDragEnd={(result: any) => appDispatch(actions.moveCard(result))}>
-      <BoardDetails card={state.editingCard} onClose={() => appDispatch(actions.cancelEdit())} onSave={(attributes: { text?: string; description?: string }) => appDispatch(actions.updateCard(attributes))} />
+      <CardDetail
+        card={state.editingCard}
+        onClose={() => appDispatch(actions.cancelEdit())}
+        onSave={(attributes: { text?: string; description?: string }) => appDispatch(actions.updateCard(attributes))}
+      />
       <StyledBoard>
         {Object.values(state.lists)
           .sort((a, b) => a.index - b.index)
@@ -65,7 +60,7 @@ export function Board() {
               onCancel={() => appDispatch(actions.cancelAdd())}
               onAdd={text => appDispatch(actions.createCard(text))}
               isAdding={l.id === state.addingOnList}
-              onStartEdit={(card:Card) => appDispatch(actions.startEdit({...card, listId: l.id}))}
+              onStartEdit={(card: Card) => appDispatch(actions.startEdit({ ...card, listId: l.id }))}
               pendingCards={state.pendingCards}
             />
           ))}
